@@ -1,4 +1,4 @@
-from src.hh_api import HeadHunterAPI
+# from src.hh_api import HeadHunterAPI
 
 class Vacancy:
     """Класс для описания вакансии"""
@@ -7,8 +7,8 @@ class Vacancy:
     def __init__(self, name, salary_from, salary_to, experience, schedule, snippet, url):
         """Инициализация экземпляра вакансии."""
         self.__name = self.__validation_name(name)
-        self.__salary_to = self.__validation_salary(salary_to)
         self.__salary_from = self.__validation_salary(salary_from)
+        self.__salary_to = self.__validation_salary(salary_to)
         self.__experience = self.__validation_experience(experience)
         self.__schedule = self.__validation_schedule(schedule)
         self.__snippet = self.__validation_snippet(snippet)
@@ -45,8 +45,10 @@ class Vacancy:
     def __str__(self):
         return f"Name: {self.name}, Salary: {self.salary_from} - {self.salary_to}, Experience: {self.experience}, Schedule: {self.schedule}, Snippet: {self.snippet}, URL: {self.url}"
 
+
     def __ge__(self, other):
         return self.salary_from >= other.salary_from
+
 
     @staticmethod
     def __validation_salary(salary):
@@ -65,13 +67,13 @@ class Vacancy:
     @staticmethod
     def __validation_experience(experience):
         if not experience:
-            return "Опыт работы в вакансии не указано"
+            return "Опыт работы в вакансии не указан"
         return experience
 
     @staticmethod
     def __validation_schedule(schedule):
         if not schedule:
-            return "Формат работы в вакансии не указано"
+            return "Формат работы в вакансии не указан"
         return schedule
 
 
@@ -90,6 +92,7 @@ class Vacancy:
 
     @classmethod
     def cast_to_object_list(cls, list_of_vacancies):
+        """Преобразует список вакансий в список объектов Vacancy."""
         filter_vacancies = []
         for vacancies in list_of_vacancies:
             salary_info = cls.__validation_salary(vacancies.get("salary", {}))
@@ -99,8 +102,7 @@ class Vacancy:
             else:
                 salary_from = cls.__validation_salary(salary_info.get("from"))
                 salary_to = cls.__validation_salary(salary_info.get("to"))
-                if salary_info.get("currency") != "RUR":
-                    continue
+
             vacancy = Vacancy(
                 name=vacancies.get("name", "Not specified"),
                 salary_from=salary_from,
@@ -110,15 +112,29 @@ class Vacancy:
                 snippet=vacancies.get("snippet", {}).get("requirement", "Not specified"),
                 url=vacancies.get("url", "Not specified")
             )
-            filter_vacancies.append(vacancy)
+
+            filter_vacancies.append(vacancy.to_dict())
 
         return filter_vacancies
 
 
+    def to_dict(self):
+        """Преобразование объекта Vacancy в словарь для дальнейшей записи в Json файл"""
+        return {
+            "name": self.name,
+            "salary_from": self.salary_from,
+            "salary_to": self.salary_to,
+            "experience": self.experience,
+            "schedule": self.schedule,
+            "snippet": self.snippet,
+            "url": self.url
+        }
 
 
-vacan = Vacancy("Python Developer", 100000, 123, "Требования", "удаленно", "", "")
-l_v = HeadHunterAPI()
-filtered_vacancies = vacan.cast_to_object_list(l_v.get_vacancies("Python Junior"))
-for v in filtered_vacancies:
-    print(v)
+# if __name__ == "__main__":
+#     vacan = Vacancy("Python Junior", 50000, 80000, "Требования", "удаленно", "", "")
+#     list_vacancies = HeadHunterAPI()
+#     filtered_vacancies = vacan.cast_to_object_list(list_vacancies.get_vacancies("Python Junior"))
+#     res_filtered_vacancies = vacan.__ge__(50000, filtered_vacancies)
+#     for vacancies in res_filtered_vacancies:
+#         print(vacancies)
