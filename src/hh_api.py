@@ -14,9 +14,9 @@ class Parser(ABC):
 
 class HeadHunterAPI(Parser):
     def __init__(self):
-        self.__vacancies = []
         self.__headers = {'User-Agent': 'HH-User-Agent'}
         self.__params = {'text': '', 'page': 0, 'per_page': 0}
+        self.__vacancies = []
 
     def _connection_to_api(self):
         """Инициализирует класс HeadHunterAPI и задает начальные параметры."""
@@ -26,18 +26,18 @@ class HeadHunterAPI(Parser):
         else:
             return response.json()
 
-    def get_vacancies(self, keyword):
+    def get_vacancies(self, keyword, max_pages=20):
         """Устанавливает соединение с API HeadHunter."""
         self.__params['text'] = keyword
-        self.__params['per_page'] = 1
+        self.__params['per_page'] = 100
 
-        while self.__params['page'] != 6:
+        while self.__params['page'] != max_pages:
             response = self._connection_to_api()
             self.__vacancies += response.get('items', [])
             self.__params['page'] += 1
         return self.__vacancies
 
 
-if __name__ == "__main__":
-    hh = HeadHunterAPI()
-    print(hh.get_vacancies('Python Junior'))
+# if __name__ == "__main__":
+#     hh = HeadHunterAPI()
+#     print(hh.get_vacancies('Python Junior'))

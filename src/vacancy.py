@@ -1,4 +1,4 @@
-# from src.hh_api import HeadHunterAPI
+from src.hh_api import HeadHunterAPI
 
 class Vacancy:
     """Класс для описания вакансии"""
@@ -135,6 +135,5 @@ class Vacancy:
 #     vacan = Vacancy("Python Junior", 50000, 80000, "Требования", "удаленно", "", "")
 #     list_vacancies = HeadHunterAPI()
 #     filtered_vacancies = vacan.cast_to_object_list(list_vacancies.get_vacancies("Python Junior"))
-#     res_filtered_vacancies = vacan.__ge__(50000, filtered_vacancies)
-#     for vacancies in res_filtered_vacancies:
+#     for vacancies in filtered_vacancies:
 #         print(vacancies)
