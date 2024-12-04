@@ -1,37 +1,39 @@
-from abc import ABC, abstractmethod
-
 # from src.vacancy import Vacancy
 # from src.hh_api import HeadHunterAPI
 # from src.utils import salary_range
 import json
 import os
+from abc import ABC, abstractmethod
+from typing import Any
 
 
 class BaseFiles(ABC):
     """Абстрактный класс для работы с файлами"""
+
     @abstractmethod
-    def get_data_file(self, *args, **kwargs):
+    def get_data_file(self) -> list:
         """Получение данных из файла."""
         pass
 
     @abstractmethod
-    def add_data_file(self, *args, **kwargs):
+    def add_data_file(self, vacancy_list: list) -> None:
         """Добавление данных в файл."""
         pass
 
     @abstractmethod
-    def delete_data_file(self, *args, **kwargs):
+    def delete_data_file(self, vacancy_delete_url: str) -> None:
         """Удаление данных из файла по URL вакансии."""
         pass
 
 
 class JsonFile(BaseFiles):
     """Класс для работы с Json файлом"""
-    def __init__(self, file="../data/vacancies.json"):
+
+    def __init__(self, file: str = "../data/vacancies.json") -> None:
         """Инициализирует класс JsonFile и задает начальные параметры."""
         self.__file = file
 
-    def get_data_file(self):
+    def get_data_file(self) -> Any:
         """Получение данных из файла."""
         full_path = os.path.abspath(self.__file)
         try:
@@ -43,7 +45,7 @@ class JsonFile(BaseFiles):
         except json.JSONDecodeError:
             return []
 
-    def add_data_file(self, vacancy_list):
+    def add_data_file(self, vacancy_list: list) -> None:
         """Добавление данных в файл."""
         read_data = self.get_data_file()
         full_path = os.path.abspath(self.__file)
@@ -58,7 +60,7 @@ class JsonFile(BaseFiles):
             with open(full_path, "w", encoding="utf-8") as f:
                 json.dump(read_data, f, ensure_ascii=False, indent=4)
 
-    def delete_data_file(self, vacancy_delete_url):
+    def delete_data_file(self, vacancy_delete_url: str) -> None:
         """Удаление данных из файла по URL вакансии."""
         read_data = self.get_data_file()
         full_path = os.path.abspath(self.__file)

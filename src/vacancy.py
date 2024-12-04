@@ -1,5 +1,5 @@
 # from src.hh_api import HeadHunterAPI
-from typing import Union, Any
+from typing import Any, Union
 
 
 class Vacancy:
@@ -7,7 +7,16 @@ class Vacancy:
 
     __slots__ = ("__name", "__salary_from", "__salary_to", "__experience", "__schedule", "__snippet", "__url")
 
-    def __init__(self, name: str, salary_from: Union[int, str], salary_to: Union[int, str], experience: str, schedule: str, snippet: str, url: str):
+    def __init__(
+        self,
+        name: str,
+        salary_from: Union[int, str],
+        salary_to: Union[int, str],
+        experience: str,
+        schedule: str,
+        snippet: str,
+        url: str,
+    ) -> None:
         """Инициализация экземпляра вакансии."""
         self.__name = self.__validation_name(name)
         self.__salary_from = self.__validation_salary(salary_from)
@@ -18,31 +27,38 @@ class Vacancy:
         self.__url = self.__validation_url(url)
 
     @property
-    def salary_from(self):
+    def salary_from(self) -> Any:
+        """Возвращает минимальную зарплату."""
         return self.__salary_from
 
     @property
-    def salary_to(self):
+    def salary_to(self) -> Any:
+        """Возвращает максимальную зарплату."""
         return self.__salary_to
 
     @property
-    def name(self):
+    def name(self) -> str:
+        """Возвращает название вакансии."""
         return self.__name
 
     @property
-    def experience(self):
+    def experience(self) -> str:
+        """Возвращает опыт работы для вакансии."""
         return self.__experience
 
     @property
-    def schedule(self):
+    def schedule(self) -> str:
+        """Возвращает график работы."""
         return self.__schedule
 
     @property
-    def snippet(self):
+    def snippet(self) -> str:
+        """Возвращает требования к кандидату."""
         return self.__snippet
 
     @property
-    def url(self):
+    def url(self) -> str:
+        """Возвращает ссылку на вакансию."""
         return self.__url
 
     def __str__(self) -> str:
@@ -53,12 +69,13 @@ class Vacancy:
             f"Snippet: {self.snippet}, URL: {self.url}"
         )
 
-    def __ge__(self, other):
+    def __ge__(self, other: "Vacancy") -> Any:
         """Метод сравнения вакансий по минимальной зарплате"""
         return self.salary_from >= other.salary_from
 
     @staticmethod
-    def __validation_salary(salary:Union[int, str] ) -> Any:
+    def __validation_salary(salary: Union[int, str]) -> Any:
+        """Валидация зарплаты"""
         if salary is None or (isinstance(salary, str)):
             return "Зарплата не указана"
         elif isinstance(salary, int) and salary < 0:
@@ -66,37 +83,42 @@ class Vacancy:
         return salary
 
     @staticmethod
-    def __validation_name(name) -> str:
+    def __validation_name(name: str) -> str:
+        """Валидация названия вакансии"""
         if not name:
             return "Название вакансии не указано"
         return name
 
     @staticmethod
-    def __validation_experience(experience) -> str:
+    def __validation_experience(experience: str) -> str:
+        """Валидация опыта работы"""
         if not experience:
             return "Опыт работы в вакансии не указан"
         return experience
 
     @staticmethod
-    def __validation_schedule(schedule) -> str:
+    def __validation_schedule(schedule: str) -> str:
+        """Валидация формата работы"""
         if not schedule:
             return "Формат работы в вакансии не указан"
         return schedule
 
     @staticmethod
-    def __validation_snippet(snippet) -> str:
+    def __validation_snippet(snippet: str) -> str:
+        """Валидация требований к сотруднику"""
         if not snippet:
             return "Требования к сотруднику в вакансии не указаны"
         return snippet
 
     @staticmethod
-    def __validation_url(url) -> str:
+    def __validation_url(url: str) -> str:
+        """Валидация ссылки на вакансию"""
         if not url:
             return "Ссылка на вакансию не указана"
         return url
 
     @classmethod
-    def currency(cls, list_of_vacancies, currency="RUR"):
+    def currency(cls, list_of_vacancies: list, currency: str = "RUR") -> list:
         """Функция для фильтрации по валютам"""
         my_list = []
         for vacancy in list_of_vacancies:
@@ -109,7 +131,7 @@ class Vacancy:
         return my_list
 
     @classmethod
-    def cast_to_object_list(cls, list_of_vacancies, currency="RUR") -> list:
+    def cast_to_object_list(cls, list_of_vacancies: list, currency: str = "RUR") -> list:
         """Преобразует список вакансий в список объектов Vacancy."""
         currency_vacancies_filter = cls.currency(list_of_vacancies, currency)
         filter_vacancies = []

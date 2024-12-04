@@ -1,7 +1,8 @@
 # from src.vacancy import Vacancy
 # from src.hh_api import HeadHunterAPI
-import pandas as pd
 from typing import Any
+
+import pandas as pd
 
 
 def salary_range(salary: int, filter_vacancies: list) -> list:

@@ -1,7 +1,8 @@
 from src.utils import salary_range, top_n
 
 
-def test_salary_range(list_of_vacancies_obg):
+def test_salary_range(list_of_vacancies_obg: list) -> None:
+    """Корректная работа функции фильтрации вакансий по зарплате"""
     assert salary_range(10000, list_of_vacancies_obg) == [
         {
             "name": "junior",
@@ -24,7 +25,8 @@ def test_salary_range(list_of_vacancies_obg):
     ]
 
 
-def test_top_n(list_of_vacancies_obg):
+def test_top_n(list_of_vacancies_obg: list) -> None:
+    """Корректная работа функции вывода топ вакансий"""
     assert top_n(list_of_vacancies_obg, 2) == [
         {
             "name": "junior",
@@ -47,5 +49,6 @@ def test_top_n(list_of_vacancies_obg):
     ]
 
 
-def test_top_n_len_more(list_of_vacancies_obg):
+def test_top_n_len_more(list_of_vacancies_obg: list) -> None:
+    """Работа функции, если number больше вакансий"""
     assert top_n(list_of_vacancies_obg, 4) == list_of_vacancies_obg

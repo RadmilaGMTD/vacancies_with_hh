@@ -1,9 +1,10 @@
-from src.vacancy import Vacancy
 import pytest
+
+from src.vacancy import Vacancy
 
 
 @pytest.fixture
-def vacancy_1():
+def vacancy_1() -> dict:
     return {
         "name": "Инженер-программист junior",
         "salary": {"from": 110000, "to": None, "currency": "RUR"},
@@ -16,7 +17,7 @@ def vacancy_1():
 
 
 @pytest.fixture
-def vacancy_obj():
+def vacancy_obj() -> Vacancy:
     return Vacancy(
         "Python Junior",
         50000,
@@ -29,7 +30,7 @@ def vacancy_obj():
 
 
 @pytest.fixture
-def vacancy_obj_2():
+def vacancy_obj_2() -> Vacancy:
     return Vacancy(
         "Python Junior",
         40000,
@@ -42,7 +43,7 @@ def vacancy_obj_2():
 
 
 @pytest.fixture
-def list_of_vacancies():
+def list_of_vacancies() -> list:
     return [
         {
             "name": "junior",
@@ -75,7 +76,7 @@ def list_of_vacancies():
 
 
 @pytest.fixture
-def list_of_vacancies_obg():
+def list_of_vacancies_obg() -> list:
     return [
         {
             "name": "junior",

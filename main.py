@@ -1,10 +1,9 @@
 from src.hh_api import HeadHunterAPI
+from src.utils import salary_range, top_n
 from src.vacancy import Vacancy
-from src.utils import salary_range
-from src.utils import top_n
 
 
-def user_interaction():
+def user_interaction() -> list:
     """Функция для взаимодействия с пользователем, получения вакансий на основе его запроса."""
     search_query = input("Какая профессия Вас интересует?: ")
     top_n_user = int(input("Введите количество вакансий для вывода в топ N: "))
