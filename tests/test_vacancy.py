@@ -1,14 +1,17 @@
-import unittest
 from unittest.mock import patch, Mock
 
+
 from src.vacancy import Vacancy
-from tests.conftest import vacancy_obj
+
 import pytest
 
 
 class TestVacancy:
     def test_str(self, vacancy_obj):
-        expected_str = 'Name: Python Junior, Salary: 50000 - 80000, Experience: Требования, Schedule: удаленно, Snippet: Знание Phyton, URL: https://api.hh.ru/vacancies/108168182?host=hh.ru'
+        expected_str = (
+            "Name: Python Junior, Salary: 50000 - 80000, Experience: Требования, Schedule: удаленно, "
+            "Snippet: Знание Phyton, URL: https://api.hh.ru/vacancies/108168182?host=hh.ru"
+        )
         assert str(vacancy_obj) == expected_str
 
     def test_salary_from(self, vacancy_obj):
@@ -82,8 +85,39 @@ class TestVacancy:
         assert result == "Python"
 
     @classmethod
-    def test_cast_to_object_list(cls, list_of_vacancies):
-        assert Vacancy.cast_to_object_list(list_of_vacancies) == [{'name': 'junior', 'salary_from': 110000, 'salary_to': 'Зарплата не указана', 'experience': 'От 1 года до 3 лет', 'schedule': 'Удаленная работа', 'snippet': 'Опыт программирования на любом из языков ООП', 'url': 'https://api.hh.ru/vacancies/111986458?host=hh.ru'},
-{'name': 'Python junior', 'salary_from': 110000, 'salary_to': 'Зарплата не указана', 'experience': 'От 1 года до 3 лет', 'schedule': 'Удаленная работа', 'snippet': 'Опыт программирования на любом из языков ООП', 'url': 'https://api.hh.ru/vacancies/111986458?host=hh.ru'},
-                                                                  {'name': 'Python', 'salary_from': "Зарплата не указана", 'salary_to': 'Зарплата не указана', 'experience': 'От 1 года до 3 лет', 'schedule': 'Удаленная работа', 'snippet': 'Опыт программирования на любом из языков ООП', 'url': 'https://api.hh.ru/vacancies/111986458?host=hh.ru'}]
+    @patch("src.vacancy.Vacancy.currency")
+    def test_cast_to_object_list(cls, mock_currency: Mock, list_of_vacancies):
+        mock_currency.return_value = list_of_vacancies
+        assert Vacancy.cast_to_object_list(list_of_vacancies) == [
+            {
+                "name": "junior",
+                "salary_from": 110000,
+                "salary_to": "Зарплата не указана",
+                "experience": "От 1 года до 3 лет",
+                "schedule": "Удаленная работа",
+                "snippet": "Опыт программирования на любом из языков ООП",
+                "url": "https://api.hh.ru/vacancies/111986458?host=hh.ru",
+            },
+            {
+                "name": "Python junior",
+                "salary_from": 110000,
+                "salary_to": "Зарплата не указана",
+                "experience": "От 1 года до 3 лет",
+                "schedule": "Удаленная работа",
+                "snippet": "Опыт программирования на любом из языков ООП",
+                "url": "https://api.hh.ru/vacancies/111986458?host=hh.ru",
+            },
+            {
+                "name": "Python",
+                "salary_from": "Зарплата не указана",
+                "salary_to": "Зарплата не указана",
+                "experience": "От 1 года до 3 лет",
+                "schedule": "Удаленная работа",
+                "snippet": "Опыт программирования на любом из языков ООП",
+                "url": "https://api.hh.ru/vacancies/111986458?host=hh.ru",
+            },
+        ]
 
+    @classmethod
+    def test_currency(cls, list_of_vacancies):
+        assert Vacancy.currency(list_of_vacancies) == list_of_vacancies
