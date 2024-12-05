@@ -20,5 +20,5 @@ def user_interaction() -> list:
         return top_n(filtered_vacancies, top_n_user)
 
 
-# if __name__ == "__main__":
-#     print(user_interaction())
+if __name__ == "__main__":
+    print(user_interaction())

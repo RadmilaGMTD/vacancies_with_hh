@@ -45,8 +45,3 @@ class HeadHunterAPI(Parser):
             self.__vacancies += response.get("items", [])
             self.__params["page"] += 1
         return self.__vacancies
-
-
-# if __name__ == "__main__":
-#     hh = HeadHunterAPI()
-#     print(hh.get_vacancies('Python Junior'))

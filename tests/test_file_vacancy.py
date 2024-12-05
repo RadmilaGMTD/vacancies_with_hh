@@ -10,38 +10,43 @@ from src.file_vacancy import JsonFile
 class TestJsonFile:
     """Класс для тестирования JsonFile"""
 
-    json_file = JsonFile(file="../test_file.json")
-    file = "../test_file.json"
+    def test_error_file_empty(self) -> None:
+        """Ошибка при чтении файла, если файл не найден"""
+        with pytest.raises(ValueError):
+            JsonFile(file=None)
 
-    def test_get_data_file(self, list_of_vacancies_obg: list) -> None:
+    @patch("src.file_vacancy.os.path.exists")
+    def test_get_data_file(self, mock_exists: Mock, list_of_vacancies_obg: list) -> None:
         """Корректное чтение файла JSON"""
+        mock_exists.return_value = "../test_file.json"
         rows = list_of_vacancies_obg
-        with open(self.file, "w", encoding="UTF-8") as file:
+        json_file = JsonFile("../test_file.json")
+        with open("../test_file.json", "w", encoding="UTF-8") as file:
             json.dump(rows, file)
-        assert self.json_file.get_data_file() == rows
+        assert json_file.get_data_file() == rows
         os.remove("../test_file.json")
 
-    def test_get_data_file_error(self) -> None:
+    @patch("src.file_vacancy.os.path.exists")
+    def test_get_data_file_error(self, mock_exists: Mock) -> None:
         """Ошибка при чтении файла"""
-        with open(self.file, "w") as file:
+        mock_exists.return_value = "../test_file.json"
+        json_file = JsonFile("../test_file.json")
+        with open("../test_file.json", "w") as file:
             file.write("a,s,d,f")
 
-        assert self.json_file.get_data_file() == []
+        assert json_file.get_data_file() == []
         os.remove("../test_file.json")
 
-    def test_get_data_file_error_file(self) -> None:
+    def test_error_file(self) -> None:
         """Ошибка при чтении файла, если файл не найден"""
-        json_file_ = JsonFile(file="none")
-        rows = "a,s,d,f"
-        with open(self.file, "w") as file:
-            json.dump(rows, file)
         with pytest.raises(FileNotFoundError):
-            json_file_.get_data_file()
-        os.remove("../test_file.json")
+            JsonFile(file="../test_file.json")
 
     @patch("src.file_vacancy.JsonFile.get_data_file")
-    def test_add_data_file(self, mock_get_data_file: Mock, list_of_vacancies_obg: list) -> None:
+    @patch("src.file_vacancy.os.path.exists")
+    def test_add_data_file(self, mock_exists: Mock, mock_get_data_file: Mock, list_of_vacancies_obg: list) -> None:
         """Корректная работа функции записи в файл"""
+        mock_exists.return_value = "../test_file.json"
         mock_get_data_file.return_value = [
             {
                 "name": "junior",
@@ -53,29 +58,38 @@ class TestJsonFile:
                 "url": "https://api.hh.ru/vacancies/111986488?host=hh.ru",
             }
         ]
-        self.json_file.add_data_file(list_of_vacancies_obg)
-        with open(self.file, "r", encoding="utf-8") as f:
+        json_file = JsonFile("../test_file.json")
+        json_file.add_data_file(list_of_vacancies_obg)
+        with open("../test_file.json", "r", encoding="utf-8") as f:
             data = json.load(f)
         assert data == list_of_vacancies_obg
         os.remove("../test_file.json")
 
     @patch("src.file_vacancy.JsonFile.get_data_file")
-    def test_add_data_file_empty(self, mock_get_data_file: Mock, list_of_vacancies_obg: list) -> None:
+    @patch("src.file_vacancy.os.path.exists")
+    def test_add_data_file_empty(
+        self, mock_exists: Mock, mock_get_data_file: Mock, list_of_vacancies_obg: list
+    ) -> None:
         """Корректная работа функции записи в файл, если файл пустой"""
+        mock_exists.return_value = "../test_file.json"
         mock_get_data_file.return_value = []
-        self.json_file.add_data_file(list_of_vacancies_obg)
-        with open(self.file, "r", encoding="utf-8") as f:
+        json_file = JsonFile("../test_file.json")
+        json_file.add_data_file(list_of_vacancies_obg)
+        with open("../test_file.json", "r", encoding="utf-8") as f:
             data = json.load(f)
         assert data == list_of_vacancies_obg
         os.remove("../test_file.json")
 
     @patch("src.file_vacancy.JsonFile.get_data_file")
-    def test_delete_data_file(self, mock_get_data_file: Mock, list_of_vacancies_obg: list) -> None:
+    @patch("src.file_vacancy.os.path.exists")
+    def test_delete_data_file(self, mock_exists: Mock, mock_get_data_file: Mock, list_of_vacancies_obg: list) -> None:
         """Корректная работа функции удаления данных из файла"""
+        mock_exists.return_value = "../test_file.json"
         mock_get_data_file.return_value = list_of_vacancies_obg
+        json_file = JsonFile("../test_file.json")
         url = "https://api.hh.ru/vacancies/111986488?host=hh.ru"
-        self.json_file.delete_data_file(url)
-        with open(self.file, "r", encoding="utf-8") as f:
+        json_file.delete_data_file(url)
+        with open("../test_file.json", "r", encoding="utf-8") as f:
             data = json.load(f)
         assert data == [
             {
@@ -99,8 +113,8 @@ class TestJsonFile:
         ]
         os.remove("../test_file.json")
         url = "https://api.hh.ru/vacancies/111986455?host=hh.ru"
-        self.json_file.delete_data_file(url)
-        with open(self.file, "r", encoding="utf-8") as f:
+        json_file.delete_data_file(url)
+        with open("../test_file.json", "r", encoding="utf-8") as f:
             data = json.load(f)
         assert data == list_of_vacancies_obg
         os.remove("../test_file.json")

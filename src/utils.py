@@ -1,5 +1,3 @@
-# from src.vacancy import Vacancy
-# from src.hh_api import HeadHunterAPI
 from typing import Any
 
 import pandas as pd
@@ -30,11 +28,3 @@ def top_n(filter_vacancies_salary: list, number: int) -> list[Any]:
     top_n_df = df.head(number)
     top_n_df_dict = top_n_df.to_dict(orient="records")
     return top_n_df_dict
-
-
-# vacan = Vacancy("Python Junior", 50000, 80000, "Требования", "удаленно", "", "")
-# hh = HeadHunterAPI()
-# filtered_vacancies = vacan.cast_to_object_list(hh.get_vacancies("Python Junior"))
-# salary_filter_vacancies = salary_range(50000,filtered_vacancies)
-# print(salary_filter_vacancies)
-# print(top_n(salary_filter_vacancies, 2))

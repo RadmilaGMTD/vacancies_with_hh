@@ -1,4 +1,3 @@
-# from src.hh_api import HeadHunterAPI
 from typing import Any, Union
 
 
@@ -169,11 +168,3 @@ class Vacancy:
             "snippet": self.snippet,
             "url": self.url,
         }
-
-
-# if __name__ == "__main__":
-#     vacan = Vacancy("Python Junior", 50000, 80000, "Требования", "удаленно", "", "")
-#     list_vacancies = HeadHunterAPI()
-#     filtered_vacancies = vacan.cast_to_object_list(list_vacancies.get_vacancies("Python Junior"), "RUR")
-#     for vacancies in filtered_vacancies:
-#         print(vacancies)
